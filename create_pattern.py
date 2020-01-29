@@ -1,3 +1,4 @@
+import random
 
 class create_pattern():
 
@@ -29,17 +30,14 @@ class create_pattern():
         return data
 
 
-    def sudden_gen(self,number_peak=2):
+    def sudden_gen(self):
         data_stream = []
-        point_change = int((self.RANGE_SIZE-800)/number_peak)
+        point_change = int((self.RANGE_SIZE-800)/2)
         print(point_change)
         data = self.LOW
         for i in range(self.RANGE_SIZE):
-            if ((i%point_change==0)&(i!=0)):
-                if data == self.LOW:
-                    data = self.HIGH
-                else:
-                    data = self.LOW
+            if(i>=point_change):
+                data = self.HIGH
             data_stream.append(data)
         self.reset()
         return data_stream
@@ -56,6 +54,38 @@ class create_pattern():
             data = data + slope
             data_stream.append(data)
         for i in range(end_curve,self.RANGE_SIZE):
+            data_stream.append(data)
+        self.reset()
+        return data_stream
+
+    def gradual(self,start_pulse=2000):
+        data_stream = []
+        point_change = int((self.RANGE_SIZE)*180/100)
+        print(point_change)
+        data = self.LOW
+        for i in range(self.RANGE_SIZE):
+            if (start_pulse<i)&(i<point_change):
+                if(random.randrange(1)==0):
+                    data = self.LOW
+                else:
+                    data = self.HIGH
+            elif (i >= point_change):
+                data = self.HIGH
+            data_stream.append(data)
+        self.reset()
+        return data_stream
+
+    def reoccuring_concept(self,number_peak=2):
+        data_stream = []
+        point_change = int((self.RANGE_SIZE-800)/number_peak)
+        print(point_change)
+        data = self.LOW
+        for i in range(self.RANGE_SIZE):
+            if ((i%point_change==0)&(i!=0)):
+                if data == self.LOW:
+                    data = self.HIGH
+                else:
+                    data = self.LOW
             data_stream.append(data)
         self.reset()
         return data_stream
