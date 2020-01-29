@@ -58,18 +58,24 @@ class create_pattern():
         self.reset()
         return data_stream
 
-    def gradual(self,start_pulse=2000):
+    def gradual(self,start_pulse=2000,end_pulse=2400,size_per_pulse=5):
         data_stream = []
-        point_change = int((self.RANGE_SIZE)*180/100)
-        print(point_change)
+        print(end_pulse)
         data = self.LOW
+        counter = 0
         for i in range(self.RANGE_SIZE):
-            if (start_pulse<i)&(i<point_change):
-                if(random.randrange(1)==0):
-                    data = self.LOW
+            if (start_pulse<i)&(i<end_pulse):
+                if (counter==0):
+                    if(random.randrange(2)==0):
+                        data = self.LOW
+                    else:
+                        data = self.HIGH
+                    counter = counter + 1
+                elif (counter==size_per_pulse):
+                    counter=0
                 else:
-                    data = self.HIGH
-            elif (i >= point_change):
+                    counter = counter + 1
+            elif (i >= end_pulse):
                 data = self.HIGH
             data_stream.append(data)
         self.reset()
