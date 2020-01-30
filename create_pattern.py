@@ -1,12 +1,12 @@
 import random
 
-class create_pattern():
+class pattern():
 
     HIGH = 10
     LOW = 0
 
     def __init__(self,range_size=5000):
-        self.LOW = 0
+        self.LOW = 1
         self.HIGH = 10
         self.RANGE_SIZE = range_size
 

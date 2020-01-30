@@ -1,9 +1,12 @@
-from create_pattern import create_pattern
+from create_pattern import pattern
 import matplotlib.pyplot as plt
+import numpy as np
 
-print('hello')
-a = create_pattern()
-plt.plot(a.sudden_gen())
-plt.show(aspect='auto')
-plt.plot(a.incremental())
-plt.show(aspect='auto')
+a = pattern()
+t = a.gradual()
+plt.plot(t)
+plt.show()
+for i in range(len(t)):
+    t[i] = t[i]+np.random.random_sample()
+plt.plot(t)
+plt.show()
