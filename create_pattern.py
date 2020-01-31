@@ -29,6 +29,19 @@ class pattern():
         data = []
         return data
 
+    def create(self,type):
+        data_stream = []
+        file_name = ''
+        if(type=='S'):
+            data_stream = self.sudden_gen()
+            file_name = 'sudden'
+        elif(type=='I'):
+            data_stream = self.incremental()
+            file_name = 'incremental'
+        elif(type=='R'):
+            data_stream = self.reoccuring_concept()
+            file_name = 'reoccuring concept'
+        return data_stream,file_name
 
     def sudden_gen(self):
         data_stream = []
