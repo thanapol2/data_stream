@@ -21,12 +21,4 @@ for i in input:
     plt.xlabel('Time')
     plt.savefig("images/"+file_name+"_input.png", aspect='auto', bbox_inches='tight', dpi=200)
     plt.show()
-    sim.test_sim(stream_data, file_name, zoom=True)
-#
-# xi = list(range(1900,2500))
-# plt.plot(xi, stream_data[1900:2500])
-# plt.ylabel('value')
-# plt.xlabel('Time')
-# plt.savefig("image/gradual_zoom.png", aspect='auto', bbox_inches='tight', dpi=200)
-# plt.show()
-# sim.test_sim(stream_data,file_name,zoom=True)
+    sim.test_sim(stream_data,file_name=file_name, zoom=True,range_zoom=1000)
