@@ -23,4 +23,5 @@ plt.xlabel('Time')
 # plt.savefig("images/"+ file_name + ".png", aspect='auto', bbox_inches='tight', dpi=200)
 plt.show()
 
-sim.test_sim(stream_data, zoom=False,range_zoom=1000)
+change_point = sim.test_sim(stream_data, zoom=False,range_zoom=1000)
+print(change_point)

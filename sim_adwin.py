@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from skmultiflow.drift_detection.adwin import ADWIN
 
+
 def test_sim(input_stream,file_name='result',zoom=False,zoom_start=0,zoom_end=5000,range_zoom=0):
     adwin = ADWIN()
     change_point=[]
@@ -40,3 +41,4 @@ def test_sim(input_stream,file_name='result',zoom=False,zoom_start=0,zoom_end=50
         plt.xlabel('Time')
         plt.savefig("images/"+file_name+"_result_zoom.png", aspect='auto', bbox_inches='tight', dpi=200)
         plt.show()
+    return change_point
