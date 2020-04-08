@@ -41,6 +41,9 @@ class pattern():
         elif(type=='R'):
             data_stream = self.reoccuring_concept()
             file_name = 'reoccuring concept'
+        elif(type=='G'):
+            data_stream = self.gradual()
+            file_name = 'gradual concept'
         return data_stream,file_name
 
     def sudden_gen(self):
