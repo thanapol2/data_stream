@@ -7,7 +7,7 @@ import sim_adwin as sim
 
 # test_path  = "C:\\Users\\karnk\\git\\data_stream\\NKADA20140920_0230U"
 # test_path  = "C:\\Users\\karnk\\git\\data_stream\\1140_1200"
-test_path  = "D:\\git_project\\data stream\\1150_1156"
+test_path  = "D:\\git_project\\data stream\\1151_1152"
 # test_path  = "D:\\git_project\\data stream\\1140_1150"
 
 test_files = os.listdir(test_path)
@@ -73,7 +73,7 @@ for i in range(int(loop)):
             crop_point.append(label_end_point)
         ax.set_xticks(crop_point)
         ax.set_xticklabels(crop_labels, rotation=60)
-    change_point = sim.sim(stream_data[start_point:end_point])
+    change_point = sim.sim_adwin(stream_data[start_point:end_point])
     # print(change_point)
     plt.plot(stream_data[start_point:end_point])
     for j in change_point:

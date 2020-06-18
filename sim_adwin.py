@@ -2,7 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 from skmultiflow.drift_detection.adwin import ADWIN
-
+from skmultiflow.drift_detection.eddm import EDDM
+from skmultiflow.drift_detection import DDM
 
 def test_sim(input_stream,file_name):
     adwin = ADWIN()
@@ -85,7 +86,7 @@ def test_sim_crop (input_stream,file_name,crop_size=0):
     plt.show()
     return change_point
 
-def sim(input_stream,start_point=0):
+def sim_adwin(input_stream, start_point=0):
     adwin = ADWIN(delta=.3)
     change_point = []
     for i in range(len(input_stream)):
@@ -96,3 +97,45 @@ def sim(input_stream,start_point=0):
             # print('Change detected in data: ' + str(input_stream[i]) + ' - at index: ' + str(i)+'\n\n')
 
     return change_point
+
+def sim_adwin(input_stream, start_point=0):
+    adwin = ADWIN(delta=.3)
+    change_point = []
+    for i in range(len(input_stream)):
+        adwin.add_element(input_stream[i])
+        if adwin.detected_change():
+            # plt.axvline(i, color='r', linestyle='dashed')
+            change_point.append(i+start_point)
+            # print('Change detected in data: ' + str(input_stream[i]) + ' - at index: ' + str(i)+'\n\n')
+
+    return change_point
+
+def sim_eddm(input_stream, start_point=0):
+    eddm = EDDM()
+    change_point = []
+    detected_warning = []
+    for i in range(len(input_stream)):
+        eddm.add_element(input_stream[i])
+        if eddm.detected_warning_zone():
+            detected_warning.append(i+start_point)
+        if eddm.detected_change():
+            # plt.axvline(i, color='r', linestyle='dashed')
+            change_point.append(i+start_point)
+            # print('Change detected in data: ' + str(input_stream[i]) + ' - at index: ' + str(i)+'\n\n')
+
+    return detected_warning,change_point
+
+def sim_ddm(input_stream, start_point=0):
+    ddm = DDM()
+    change_point = []
+    detected_warning = []
+    for i in range(len(input_stream)):
+        ddm.add_element(input_stream[i])
+        if ddm.detected_warning_zone():
+            detected_warning.append(i+start_point)
+        if ddm.detected_change():
+            # plt.axvline(i, color='r', linestyle='dashed')
+            change_point.append(i+start_point)
+            # print('Change detected in data: ' + str(input_stream[i]) + ' - at index: ' + str(i)+'\n\n')
+
+    return detected_warning,change_point
