@@ -3,7 +3,7 @@ import numpy as np
 from skmultiflow.drift_detection.base_drift_detector import BaseDriftDetector
 
 
-class chebyshev_adwin(BaseDriftDetector):
+class chebyshev_SEA(BaseDriftDetector):
 
     def __init__(self, max_size = 200 , min_size = 100, k=2):
         super().__init__()
@@ -43,8 +43,12 @@ class chebyshev_adwin(BaseDriftDetector):
         if abs(value - mean) > self.k * variance:
             bln_change = True
         # self._width += 1
-        if len(self.window) >= self.max_size:
-            self.window.pop(0)
+        if bln_change:
+            while len(self.window) >= self.min_size:
+                self.window.pop(0)
+        else:
+            if len(self.window) >= self.max_size:
+                self.window.pop(0)
         self.in_concept_change = bln_change
         return bln_change
     
