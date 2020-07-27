@@ -35,7 +35,7 @@ for pattern,num_graph,pattern_name in patterns:
     answer_lists = []
     answer_st_ed_list = []
 
-    cheb_test= chebyshev(max_size = cheb_windows_size, k=k)
+    cheb_ineq= chebyshev(max_size = cheb_windows_size, k=k)
     cheb_test_list = []
 
     with open(test) as txt_lines:
@@ -59,9 +59,9 @@ for pattern,num_graph,pattern_name in patterns:
 
     data_lists = test_list[min_len_cal:max_len_cal]
     for i in range(len(data_lists)):
-        cheb_test.add_element(data_lists[i])
+        cheb_ineq.add_element(data_lists[i])
         # adwin.add_element(data_lists[i])
-        if cheb_test.detected_change():
+        if cheb_ineq.detected_change():
         # if adwin.detected_change():
             cheb_test_list.append(i)
 
@@ -88,14 +88,24 @@ for pattern,num_graph,pattern_name in patterns:
 #     acc cal
     transit_count = len(answer_st_ed_list)
     count = 0
+    true_count = 0
     for start,end in answer_st_ed_list:
         found = False
-        i = 0
-        while (i < len(cheb_test_list))& (not found) :
-            if (start <= cheb_test_list[i]) & (cheb_test_list[i]<=end):
-                count = count + 1
-                found = True
-            i = i + 1
+        # i = 0
+        for cheb_test in cheb_test_list:
+            if (start <= cheb_test) & (cheb_test <= end):
+                true_count = true_count + 1
+                if not found:
+                    count = count + 1
+                    found = True
+        # while (i < len(cheb_test_list))& (not found) :
+        #     if (start <= cheb_test_list[i]) & (cheb_test_list[i]<=end):
+        #         count = count + 1
+        #         true_count = true_count+1
+        #         found = True
+        #     i = i + 1
+
+
     print("acc  {} trans_num = {} found = {} rate = {}".format(pattern_name,
                                                                transit_count,
                                                                count,
