@@ -13,6 +13,7 @@ fig.set_size_inches(18, 9)
 
 _len = 100
 patterns = [("si",0,"SIN pattern"),("sq",1,"Square pattern"),("tr",2, "Triangle pattern")]
+# patterns = [("si",0,"SIN pattern")]
 _width = 1
 min_len_cal = 0
 max_len_cal = 1500000

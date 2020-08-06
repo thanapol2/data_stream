@@ -3,17 +3,15 @@ import matplotlib.axes as ax
 import numpy as np
 import os
 import statistics
-# from chebyshev_SEA import chebyshev_SEA as chebyshev
-from chebyshev_adwin import chebyshev_adwin as chebyshev
-from skmultiflow.drift_detection.adwin import ADWIN
+from method.Ad_cheb import Ad_cheb as ad_cheb
 
 # Fix parameter
 _path = "D:\\git_project\\data stream\\dataset\\"
 # _path = "C:\\Users\\karnk\\git\\data_stream\\dataset\\"
 raw = _path + "training\\poisson_train.txt"
-# patterns = [("si", 0, "SIN pattern"), ("sq", 1, "Square pattern"), ("tr", 2, "Triangle pattern")]
+patterns = [("si", 0, "SIN pattern"), ("sq", 1, "Square pattern"), ("tr", 2, "Triangle pattern")]
 # patterns = [("si", 0, "SIN pattern"), ("sq", 1, "Square pattern")]
-patterns = [("si", 0, "SIN pattern")]
+# patterns = [("si", 0, "SIN pattern")]
 
 
 def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
@@ -50,9 +48,8 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
         answer_lists = []
         answer_st_ed_list = []
 
+        cheb_test = ad_cheb()
 
-
-        cheb_test = chebyshev(max_size=cheb_windows_size, k=k)
         cheb_result_list = []
 
         with open(test) as txt_lines:
@@ -65,9 +62,7 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
         for i in answer_lists:
             start = i
             end = i + _len
-            # if start<= max_len_cal:
-            #     if  end > max_len_cal:
-            #         end = max_len_cal-1
+
             xa = range(start, end)
             answer_st_ed_list.append((start, end))
             ya = [160] * _len  # Fix high of area
@@ -75,20 +70,20 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
             axs[num_graph].fill_between(xa, ya, alpha=0.30, color='orange')
 
         data_lists = test_list[min_len_cal:max_len_cal]
-        print("#### start check variance #######")
-        window = []
-        list_up_variance = []
-        list_low_variance = []
-        for data in test_list:
-            if len(window) >= 500:
-                window.pop(0)
-            window.append(data)
-            mean = sum(window) / len(window)
-            # variance = sum((i - mean) ** 2 for i in window) / len(window)
-            variance = np.std(window)
-            list_up_variance.append(mean + (variance * k))
-            list_low_variance.append(mean + (variance * (-k)))
-        print("#### end check variance #######")
+        # print("#### start check variance #######")
+        # window = []
+        # list_up_variance = []
+        # list_low_variance = []
+        # for data in test_list:
+        #     if len(window) >= 500:
+        #         window.pop(0)
+        #     window.append(data)
+        #     mean = sum(window) / len(window)
+        #     # variance = sum((i - mean) ** 2 for i in window) / len(window)
+        #     variance = np.std(window)
+        #     list_up_variance.append(mean + (variance * k))
+        #     list_low_variance.append(mean + (variance * (-k)))
+        # print("#### end check variance #######")
         print("#### start check cheb #######")
         for i in range(len(data_lists)):
             cheb_test.add_element(data_lists[i])
@@ -107,15 +102,7 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
         axs[num_graph].set_xlim(xlim_min, xlim_max)
         axs[num_graph].set_ylabel('value')
         axs[num_graph].set_xlabel('Time')
-        # axs[1].ylabel('value')
-        # axs[1].xlabel('Time')
-        # fig.suptitle(pattern+" Width = "+ str(_width)+" Length ", fontsize=20)
-        # fig.suptitle("Chev with max_size = "+str(max_size)+" min_size =  "+str(min_size), fontsize=20)
-        # fig.suptitle("Chev with max_size = 3000", fontsize=20)
 
-        # plt.plot(list_mean,color='green',linewidth=1)
-        # plt.plot(list_up_variance,color='red')
-        # plt.plot(list_low_variance,color='red')
         tittle = "{}: Width = {} Length = {}".format(pattern_name, _width, _len)
         # axs[num_graph].set_title(pattern_name+": Width = "+ str(_width)+" Length =" + str(_len), fontsize=20)
         axs[num_graph].set_title(tittle, fontsize=20)
@@ -158,9 +145,9 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
             'test_list':test_list,
             'answer_st_ed_list':answer_st_ed_list,
             'cheb_result_list':cheb_result_list,
-            'tittle_graph':tittle,
-            'list_up_variance' : list_up_variance,
-            'list_low_variance' :list_low_variance
+            # 'list_up_variance' : list_up_variance,
+            # 'list_low_variance' :list_low_variance,
+            'tittle_graph': tittle
         }
         result.append(data_dic)
 
@@ -180,8 +167,8 @@ def plot_result(results):
         answer_st_ed_list = result['answer_st_ed_list']
         cheb_result_list = result['cheb_result_list']
         tittle= result['tittle_graph']
-        list_up_variance = result['list_up_variance']
-        list_low_variance = result['list_low_variance']
+        # list_up_variance = result['list_up_variance']
+        # list_low_variance = result['list_low_variance']
         count_image = 0
         min_ylim = min(test_list)-100
         max_ylim = max(test_list)+100
@@ -194,8 +181,8 @@ def plot_result(results):
             fig = plt.gcf()
             fig.set_size_inches(18, 9)
             plt.plot(test_list)
-            plt.plot(list_up_variance,color='red')
-            plt.plot(list_low_variance,color='red')
+            # plt.plot(list_up_variance,color='red')
+            # plt.plot(list_low_variance,color='red')
             plt.gca().set_ylim(min_ylim, max_ylim)
             plt.gca().set_xlim(start-500, end+500)
             plt.axvline(start, color='green', linestyle='dashdot', linewidth=1)
