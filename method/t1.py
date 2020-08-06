@@ -9,7 +9,7 @@ for i in range(5, 10):
     data_stream[i] = np.random.randint(4, high=8)
 # b = ['a','b','c']
 w = []
-
+print(data_stream)
 for instace in data_stream:
     w.append(instace)
     w1 = []
@@ -25,9 +25,17 @@ for instace in data_stream:
         for i in w2:
             w1.append(w2.pop(0))
             if len(w1)>0:
-                mean_w1 = statistics.harmonic_mean(w1)
+                mean_w1 = statistics.mean(w1)
             if len(w2)>0:
-                mean_w2 = statistics.harmonic_mean(w2)
+                mean_w2 = statistics.mean(w2)
+            cal = abs(mean_w1-mean_w2)
+            if cal > (3/abs(_max-_min)):
+                end_loop = True
+                # update w
+                w = w2[:]
+
+            # = (*th^2)/(max-min)^2
+
             if len(w2) == 0:
                 end_loop = True
 
