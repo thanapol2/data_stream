@@ -40,6 +40,8 @@ class Ad_cheb(BaseDriftDetector):
         w2 = self.window[:]
         end_loop = False
         cursor = 0
+        if len(w2)>500:
+            w2.pop(0)
         while not end_loop:
             _max = max(self.window[:])
             _min = min(self.window[:])

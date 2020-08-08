@@ -4,14 +4,17 @@ import numpy as np
 import os
 import statistics
 from method.Ad_cheb import Ad_cheb as ad_cheb
+from datetime import datetime
 
 # Fix parameter
+# _path = "D:\\data stream\\data stream\\data_stream\\dataset\\"
 _path = "D:\\git_project\\data stream\\dataset\\"
 # _path = "C:\\Users\\karnk\\git\\data_stream\\dataset\\"
 raw = _path + "training\\poisson_train.txt"
-patterns = [("si", 0, "SIN pattern"), ("sq", 1, "Square pattern"), ("tr", 2, "Triangle pattern")]
+_text_file = _path+"result.txt"
+# patterns = [("si", 0, "SIN pattern"), ("sq", 1, "Square pattern"), ("tr", 2, "Triangle pattern")]
 # patterns = [("si", 0, "SIN pattern"), ("sq", 1, "Square pattern")]
-# patterns = [("si", 0, "SIN pattern")]
+patterns = [("si", 0, "SIN pattern")]
 
 
 def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
@@ -37,6 +40,7 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
 
 
     for pattern, num_graph, pattern_name in patterns:
+        start_time = datetime.now()
         print("#### start file {} w :{} i: {}".format(pattern, _width, _len))
         test = _path + "test\\poisson_test_" + pattern + "_w" + str(_width) + "_i" + str(_len) + ".txt"
         answer = _path + "answer\\poisson_ans_" + pattern + "_w" + str(_width) + "_i" + str(_len) + ".txt"
@@ -70,20 +74,7 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
             axs[num_graph].fill_between(xa, ya, alpha=0.30, color='orange')
 
         data_lists = test_list[min_len_cal:max_len_cal]
-        # print("#### start check variance #######")
-        # window = []
-        # list_up_variance = []
-        # list_low_variance = []
-        # for data in test_list:
-        #     if len(window) >= 500:
-        #         window.pop(0)
-        #     window.append(data)
-        #     mean = sum(window) / len(window)
-        #     # variance = sum((i - mean) ** 2 for i in window) / len(window)
-        #     variance = np.std(window)
-        #     list_up_variance.append(mean + (variance * k))
-        #     list_low_variance.append(mean + (variance * (-k)))
-        # print("#### end check variance #######")
+
         print("#### start check cheb #######")
         for i in range(len(data_lists)):
             cheb_test.add_element(data_lists[i])
@@ -122,6 +113,7 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
                         found = True
         alert_count = len(cheb_result_list)
         false_count = alert_count-true_count
+
         print("acc  {} w = {} i ={} trans_num = {} tran_found = {} "
               "rate = {} alert_count = {},false_count ={} false_rate ={}"
               .format(pattern_name,
@@ -134,6 +126,26 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
                       false_count,
                       float(false_count)/float(alert_count)*100)
               )
+
+        with open(_text_file, "a") as myfile:
+            end_time = datetime.now()
+            myfile.write("\n===================================\n")
+            myfile.write("start time : {} end time {} \n".format(str(start_time),str(end_time)))
+            myfile.write("acc  {} w = {} i ={} trans_num = {} tran_found = {} "
+              "rate = {} alert_count = {},false_count ={} false_rate ={}\n"
+              .format(pattern_name,
+                      _width,
+                      _len,
+                      transit_count,
+                      count,
+                      (float(count) / float(transit_count) * 100),
+                      alert_count,
+                      false_count,
+                      float(false_count)/float(alert_count)*100)
+              )
+            myfile.write("===================================\n")
+            myfile.close()
+
         data_dic = {
             'pattern_name':pattern_name,
             'pattern_shot':pattern,
