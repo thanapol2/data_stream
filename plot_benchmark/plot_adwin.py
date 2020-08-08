@@ -7,7 +7,7 @@ from method.Ad_cheb import Ad_cheb as ad_cheb
 from datetime import datetime
 
 # Fix parameter
-# _path = "D:\\data stream\\data stream\\data_stream\\dataset\\"
+# _path = "C:\\data stream\\data_stream\\dataset\\"
 _path = "D:\\git_project\\data stream\\dataset\\"
 # _path = "C:\\Users\\karnk\\git\\data_stream\\dataset\\"
 raw = _path + "training\\poisson_train.txt"
@@ -23,9 +23,9 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
               xlim_max = 6000):
     result = []
     plot_resource = []
-    fig, axs = plt.subplots(3)
-    fig = plt.gcf()
-    fig.set_size_inches(18, 9)
+    # fig, axs = plt.subplots(3)
+    # fig = plt.gcf()
+    # fig.set_size_inches(18, 9)
 
     _len = _len
 
@@ -70,8 +70,8 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
             xa = range(start, end)
             answer_st_ed_list.append((start, end))
             ya = [160] * _len  # Fix high of area
-            # axs[num_graph].axvline(start, color='red', linestyle='-', linewidth=0.7)
-            axs[num_graph].fill_between(xa, ya, alpha=0.30, color='orange')
+
+
 
         data_lists = test_list[min_len_cal:max_len_cal]
 
@@ -85,18 +85,17 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
 
         print("#### end check cheb #######")
         print("#### plot  cheb #######")
-        for i in cheb_result_list:
-            axs[num_graph].axvline(i, color='red', linestyle='-', linewidth=0.7)
-
-        axs[num_graph].plot(test_list)
-        axs[num_graph].set_ylim(55, 155)
-        axs[num_graph].set_xlim(xlim_min, xlim_max)
-        axs[num_graph].set_ylabel('value')
-        axs[num_graph].set_xlabel('Time')
+        # for i in cheb_result_list:
+        #     axs[num_graph].axvline(i, color='red', linestyle='-', linewidth=0.7)
+        #
+        # axs[num_graph].plot(test_list)
+        # axs[num_graph].set_ylim(55, 155)
+        # axs[num_graph].set_xlim(xlim_min, xlim_max)
+        # axs[num_graph].set_ylabel('value')
+        # axs[num_graph].set_xlabel('Time')
 
         tittle = "{}: Width = {} Length = {}".format(pattern_name, _width, _len)
-        # axs[num_graph].set_title(pattern_name+": Width = "+ str(_width)+" Length =" + str(_len), fontsize=20)
-        axs[num_graph].set_title(tittle, fontsize=20)
+        # axs[num_graph].set_title(tittle, fontsize=20)
         #     acc cal
         transit_count = len(answer_st_ed_list)
         count = 0
@@ -104,7 +103,6 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
         print("#### cal result  cheb #######")
         for start, end in answer_st_ed_list:
             found = False
-            # i = 0
             for cheb_test in cheb_result_list:
                 if (start <= cheb_test) & (cheb_test <= end):
                     true_count = true_count + 1
