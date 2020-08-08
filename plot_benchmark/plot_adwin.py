@@ -129,10 +129,10 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
 
         with open(_text_file, "a") as myfile:
             end_time = datetime.now()
-            myfile.write("\n===================================\n")
+            myfile.write("\n=============ADWIN================\n")
             myfile.write("start time : {} end time {} \n".format(str(start_time),str(end_time)))
             myfile.write("acc  {} w = {} i ={} trans_num = {} tran_found = {} "
-              "rate = {} alert_count = {},false_count ={} false_rate ={}\n"
+              "rate = {} alert_count = {},false_count ={} false_rate ={}"
               .format(pattern_name,
                       _width,
                       _len,
@@ -143,7 +143,7 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
                       false_count,
                       float(false_count)/float(alert_count)*100)
               )
-            myfile.write("===================================\n")
+            myfile.write("\n=============ADWIN================\n")
             myfile.close()
 
         data_dic = {
