@@ -161,7 +161,7 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
         }
         result.append(data_dic)
 
-    plt.show()
+    # plt.show()
     return(result)
 
 def plot_result(results):
