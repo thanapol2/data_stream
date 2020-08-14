@@ -25,11 +25,10 @@ class Ad_cheb(BaseDriftDetector):
         if abs(value - mean) > self.k * variance:
             bln_change = True
             print("clear len {}".format(len(self.window)))
-            self.window = []
-
+            # self.window = []
         # self._width += 1
-        else:
-            # if len(self.window)>500:
+        # else:
+        #     if len(self.window)>10000:
             self.update_by_adwin(value)
         self.in_concept_change = bln_change
         return bln_change
@@ -40,7 +39,7 @@ class Ad_cheb(BaseDriftDetector):
         w2 = self.window[:]
         end_loop = False
         cursor = 0
-        if len(w2)>500:
+        while len(w2)>10000:
             w2.pop(0)
         while not end_loop:
             _max = max(self.window[:])
@@ -63,6 +62,7 @@ class Ad_cheb(BaseDriftDetector):
                 if cal > 3*variance:
                     end_loop = True
                     # update w
-                    self.window[:] = w1[:]
+                    self.window = w2[:]
+                    break
                 if len(w2) == 0:
                     end_loop = True

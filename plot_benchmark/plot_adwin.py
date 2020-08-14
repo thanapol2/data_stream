@@ -122,7 +122,7 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
                       (float(count) / float(transit_count) * 100),
                       alert_count,
                       false_count,
-                      float(false_count)/float(alert_count)*100)
+                      float(false_count)/float(alert_count)+1*100)
               )
 
         with open(_text_file, "a") as myfile:

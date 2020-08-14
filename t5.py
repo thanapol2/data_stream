@@ -8,8 +8,8 @@ i_list = [100]
 result = []
 for i in w_list:
     for j in i_list:
-        a = ben.plotbench(_len=j,_width=i,cheb_windows_size=1000)
+        a = ben.plotbench(_len=j,_width=i)
         # a = ben.plotADWIN(_len=j,_width=i)
         result.append(a)
-        ben.plot_result(a)
+        # ben.plot_result(a)
 # b = ben.plot_result(result)
