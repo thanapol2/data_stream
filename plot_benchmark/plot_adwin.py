@@ -9,18 +9,21 @@ from datetime import datetime
 # Fix parameter
 # _path = "C:\\data stream\\data_stream\\dataset\\"
 _path = "D:\\git_project\\data stream\\dataset\\"
+_prefix = "poisson"
+# _prefix = "hinet"
 # _path = "C:\\Users\\karnk\\git\\data_stream\\dataset\\"
-raw = _path + "training\\poisson_train.txt"
-_text_file = _path+"result.txt"
-# patterns = [("si", 0, "SIN pattern"), ("sq", 1, "Square pattern"), ("tr", 2, "Triangle pattern")]
+raw = _path + "training\\"+_prefix+"\\_train.txt"
+_text_file = _path+"image\\"+_prefix+"\\result.txt"
+patterns = [("si", 0, "SIN pattern"), ("sq", 1, "Square pattern"), ("tr", 2, "Triangle pattern")]
 # patterns = [("si", 0, "SIN pattern"), ("sq", 1, "Square pattern")]
-patterns = [("si", 0, "SIN pattern")]
+# patterns = [("si", 0, "SIN pattern")]
 
 
 def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
               cheb_windows_size = 500,
               xlim_min = 0,
-              xlim_max = 6000):
+              xlim_max = 6000,
+              max_window = 500):
     result = []
     plot_resource = []
     # fig, axs = plt.subplots(3)
@@ -42,8 +45,8 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
     for pattern, num_graph, pattern_name in patterns:
         start_time = datetime.now()
         print("#### start file {} w :{} i: {}".format(pattern, _width, _len))
-        test = _path + "test\\poisson_test_" + pattern + "_w" + str(_width) + "_i" + str(_len) + ".txt"
-        answer = _path + "answer\\poisson_ans_" + pattern + "_w" + str(_width) + "_i" + str(_len) + ".txt"
+        test = _path + "test\\"+_prefix+"_test_" + pattern + "_w" + str(_width) + "_i" + str(_len) + ".txt"
+        answer = _path + "answer\\"+_prefix+"_ans_" + pattern + "_w" + str(_width) + "_i" + str(_len) + ".txt"
 
         # test =  _path + "test\\hinet_test_si_w1_i100.txt"
         # answer = _path + "answer\\hinet_ans_"+pattern+"_w"+str(w)+"_i"+str(size)+".txt"
@@ -52,7 +55,7 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
         answer_lists = []
         answer_st_ed_list = []
 
-        cheb_test = ad_cheb()
+        cheb_test = ad_cheb(max_window = 500)
 
         cheb_result_list = []
 
@@ -103,15 +106,15 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
         print("#### cal result  cheb #######")
         for start, end in answer_st_ed_list:
             found = False
-            for cheb_test in cheb_result_list:
-                if (start <= cheb_test) & (cheb_test <= end):
+            for cheb_result in cheb_result_list:
+                if (start <= cheb_result) & (cheb_result <= end):
                     true_count = true_count + 1
                     if not found:
                         count = count + 1
                         found = True
         alert_count = len(cheb_result_list)
         false_count = alert_count-true_count
-
+        print("ADW & CHEB = {}".format(cheb_test.get_count()))
         print("acc  {} w = {} i ={} trans_num = {} tran_found = {} "
               "rate = {} alert_count = {},false_count ={} false_rate ={}"
               .format(pattern_name,
@@ -122,13 +125,13 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
                       (float(count) / float(transit_count) * 100),
                       alert_count,
                       false_count,
-                      float(false_count)/float(alert_count)+1*100)
+                      float(false_count)/(float(alert_count)+1)*100)
               )
 
         with open(_text_file, "a") as myfile:
             end_time = datetime.now()
             myfile.write("\n=============ADWIN================\n")
-            myfile.write("start time : {} end time {} \n".format(str(start_time),str(end_time)))
+            myfile.write("file : {}  start time : {} end time {} \n".format(_prefix,str(start_time),str(end_time)))
             myfile.write("acc  {} w = {} i ={} trans_num = {} tran_found = {} "
               "rate = {} alert_count = {},false_count ={} false_rate ={}"
               .format(pattern_name,
@@ -182,7 +185,8 @@ def plot_result(results):
         count_image = 0
         min_ylim = min(test_list)-100
         max_ylim = max(test_list)+100
-        folder_image = _path + "image\\poisson_ad\\{}\\w{}\\{}\\".format(pattern_shot, _width, _len)
+        folder_image = _path + "image\\"+_prefix+"\\{}\\w{}\\{}\\".format(pattern_shot, _width, _len)
+        # folder_image = _path + "image\\" + _prefix + "_ad\\{}\\w{}\\{}\\".format(pattern_shot, _width, _len)
         print(len(answer_st_ed_list))
         print(folder_image)
         for start,end in answer_st_ed_list:

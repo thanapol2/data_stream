@@ -1,9 +1,16 @@
+import math
+
 import numpy as np
 
 from skmultiflow.drift_detection.base_drift_detector import BaseDriftDetector
 
+"""
+ref : https://scikit-multiflow.github.io/
+"""
 
 class chebyshev_adwin(BaseDriftDetector):
+
+    MAX_BUCKETS = 5
 
     def __init__(self, max_size = 200 , min_size = 100, k=2):
         super().__init__()

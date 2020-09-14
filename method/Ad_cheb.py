@@ -4,16 +4,21 @@ from skmultiflow.drift_detection.base_drift_detector import BaseDriftDetector
 
 class Ad_cheb(BaseDriftDetector):
 
-    def __init__(self,k=3,delta=.002):
+    def __init__(self,k=3,delta=.002,max_window = 10000):
         self.window = []
         self.reset()
         self.k = k
         self.delta = delta
+        self.count_detect = 0
+        self.max_window = max_window
 
 
     def reset(self):
         super().reset()
         self.window = []
+
+    def get_count(self):
+        return (self.count_detect)
 
     def add_element(self, value):
         bln_change = False
@@ -24,12 +29,17 @@ class Ad_cheb(BaseDriftDetector):
         variance = np.std(self.window)
         if abs(value - mean) > self.k * variance:
             bln_change = True
-            print("clear len {}".format(len(self.window)))
+            print("detect len {}".format(len(self.window)))
             # self.window = []
         # self._width += 1
         # else:
-        #     if len(self.window)>10000:
-            self.update_by_adwin(value)
+        if len(self.window) > 1000:
+            adwin_change = self.update_by_adwin(value)
+            print("clear len {}".format(len(self.window)))
+            # if adwin_change&bln_change:
+            #     self.count_detect = self.count_detect + 1
+        # if len(self.window)>10000:
+        #     self.window.pop(0)
         self.in_concept_change = bln_change
         return bln_change
 
@@ -38,9 +48,10 @@ class Ad_cheb(BaseDriftDetector):
         w1 = []
         w2 = self.window[:]
         end_loop = False
+        update_window = False
         cursor = 0
-        while len(w2)>10000:
-            w2.pop(0)
+        # while len(w2)>self.max_window:
+        #     w2.pop(0)
         while not end_loop:
             _max = max(self.window[:])
             _min = min(self.window[:])
@@ -59,10 +70,12 @@ class Ad_cheb(BaseDriftDetector):
                 variance = np.std(self.window)
                 # epsilon = np.sqrt(2 * m * variance * dd) + 1. * 2 / 3 * dd * m
                 # print ("cal {} var {}".format(cal,variance))
-                if cal > 3*variance:
+                if cal > 3*variance/(np.sqrt(statistics.harmonic_mean(self.window))):
                     end_loop = True
                     # update w
                     self.window = w2[:]
+                    update_window = True
                     break
                 if len(w2) == 0:
                     end_loop = True
+        return update_window
