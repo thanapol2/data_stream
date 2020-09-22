@@ -33,13 +33,14 @@ class plot_data():
         self._folder_pattern = "{}_L{}_I{}".format(self._pattern,self._len,self._interval)
         self.test_path = "{}\\lightcurve_benchmark\\{}\\{}\\test".format(self._path,self._type,self._folder_pattern)
         self.ans_path =  "{}\\lightcurve_benchmark\\{}\\{}\\answer".format(self._path, self._type,self._folder_pattern)
-        self.image_tran_path = "{}\\lightcurve_benchmark\\{}\\{}\\tran".format(self._path, self._type,self._folder_pattern)
+        self.image_tran_path = "{}\\lightcurve_benchmark\\{}\\{}\\tran_img".format(self._path, self._type,self._folder_pattern)
 
     def load_data(self):
         print("#### start open file {} l :{} i: {}".format(self._pattern, self._len, self._interval))
         test_files_list = []
         ans_files_list = []
         name_list = []
+        print("Load : {}".format(self.test_path))
         for r, d, f in os.walk(self.test_path):
             for file in f:
                 name_list.append(file)
@@ -79,7 +80,7 @@ class plot_data():
             plt.gca().set_ylabel('value')
             plt.gca().set_xlabel('Time')
             plt.savefig(os.path.join(self.image_tran_path,"{}.png".format(name_list[index])))
-
+            plt.clf()
             print("#### end file test_files[index]    ###########")
 
 
