@@ -1,5 +1,13 @@
 import matplotlib.pyplot as plt
+import glob
+import matplotlib.axes as ax
+import numpy as np
 import os
+import statistics
+from method.Ad_cheb import Ad_cheb as ad_cheb
+from datetime import datetime
+from os import listdir
+from os.path import isfile, join
 
 class plot_data():
 
@@ -52,10 +60,6 @@ class plot_data():
 
     def get_dataset_answer_st_ed(self,index):
         return self.dataset_answer_st_ed_list[index]
-
-    def get_file_lenght(self):
-        print(len(self.name_list))
-        return int(len(self.name_list))
 
     def load_data(self):
         self.reset_dateset()

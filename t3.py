@@ -1,18 +1,25 @@
-from method.plot_data import  plot_data as plot_data
-from method.lightcurve_benchmark.change_detection import  change_detection
+from skmultiflow.data import SEAGenerator
+import numpy as np
+import pandas as pd
+from skmultiflow.drift_detection.adwin import ADWIN
 
-cheb_windows_size = 100
-k = 3
-data = plot_data(path='C:\\Users\\karnk\\git\\data_stream\\code',type='test_pca',len = 1,interval = 5,img_path ='tran_img')
-data.load_data()
+stream = SEAGenerator(random_state=1)
+stream.prepare_for_use()
 
-# data.save_image_transient()
-for i in range(data.get_file_lenght()):
-    test_list = data.get_dataset_test(i)
-    answer = data.get_dataset_answer(i)
-    start_end = data.get_dataset_answer_st_ed(i)
-    cd = change_detection(test_list=test_list,answer=answer,start_end=start_end)
-    cd.compute_change(cheb_windows_size=cheb_windows_size,k=k)
-    print(cd.get_tran_found())
-    print(cd.get_false_count())
-    # print("test")
+X, y = stream.next_sample(1000)
+print(X.shape, y.shape)
+df = pd.DataFrame(np.hstack((X,np.array([y]).T)))
+df.to_csv("file.csv")
+
+
+adwin = ADWIN()
+# Simulating a data stream as a normal distribution of 1's and 0's
+data_stream = np.random.randint(2, size=2000)
+# Changing the data concept from index 999 to 2000
+for i in range(999, 2000):
+    data_stream[i] = np.random.randint(4, high=8)
+# Adding stream elements to ADWIN and verifying if drift occurred
+for i in range(2000):
+    adwin.add_element(data_stream[i])
+    if adwin.detected_change():
+        print('Change detected in data: ' + str(data_stream[i]) + ' - at index: ' + str(i))
