@@ -11,7 +11,7 @@ from os.path import isfile, join
 
 class plot_data():
 
-    def __init__(self, pattern='sq',path='none',len = 1,interval = 5,type='pca',is_limit = True):
+    def __init__(self, pattern='sq',path='none',len = 1,interval = 5,type='pca',is_limit = True,img_path ='tran_img'):
         self.reset()
         self.reset_dateset()
         self.is_limit = is_limit
@@ -23,7 +23,7 @@ class plot_data():
         self._folder_pattern = "{}_L{}_I{}".format(self._pattern,self._len,self._interval)
         self.test_path = "{}\\lightcurve_benchmark\\{}\\{}\\test".format(self._path,self._type,self._folder_pattern)
         self.ans_path =  "{}\\lightcurve_benchmark\\{}\\{}\\answer".format(self._path, self._type,self._folder_pattern)
-        self.image_tran_path = "{}\\lightcurve_benchmark\\{}\\{}\\tran_img".format(self._path, self._type,self._folder_pattern)
+        self.image_tran_path = "{}\\lightcurve_benchmark\\{}\\{}\\{}".format(self._path, self._type,self._folder_pattern,img_path)
         self.test_files_list = []
         self.ans_files_list = []
         self.name_list = []
@@ -74,6 +74,7 @@ class plot_data():
             for file in f:
                 self.ans_files_list.append(os.path.join(r, file))
         print("#### End load file {} l :{} i: {}".format(self._pattern, self._len, self._interval))
+
         for index in range(len(self.test_files_list)):
             test_list = []
             answer_lists = []
@@ -86,12 +87,40 @@ class plot_data():
             with open(self.ans_files_list[index]) as txt_lines:
                 for line in txt_lines:
                     answer_lists.append(int(line.replace('\n', ''))*self._interval)
-                    # print ("{} .... {}".format(int(line.replace('\n', '')) ,int(line.replace('\n', '')) * self._interval))
+                    print ("{} .... {}".format(int(line.replace('\n', '')) ,int(line.replace('\n', '')) * self._interval))
             for i in answer_lists:
                 start = i
                 end = i + self._interval
-                answer_st_ed_list.append((start, end))
+                answer_st_ed_list.append([start, end])
 
+            # min_ylim = min(test_list) - 100
+            # max_ylim = max(test_list) + 100
+            # fig = plt.gcf()
+            # fig.set_size_inches(18, 9)
+            # plt.plot(test_list)
+            # plt.gca().set_ylim(min_ylim, max_ylim)
+            # if self.is_limit:
+            #     plt.gca().set_xlim(start - 200, end + 200)
+            # plt.axvline(start, color='green', linestyle='dashdot', linewidth=1)
+            # plt.axvline(end, color='green', linestyle='dashdot', linewidth=1)
+            # plt.gca().set_ylabel('value')
+            # plt.gca().set_xlabel('Time')
+            # plt.savefig(os.path.join(self.image_tran_path,"{}.png".format(self.name_list[index])))
+            # plt.clf()
+            self.dataset_test_list.append(test_list)
+            self.dataset_answer_list.append(answer_lists)
+            self.dataset_answer_st_ed_list.append(answer_st_ed_list)
+
+            print("#### end file test_files[index]    ###########")
+
+    def save_image_transient(self):
+        print("#### start save image {} l :{} i: {}".format(self._pattern, self._len, self._interval))
+        for index in range(len(self.test_files_list)):
+
+            test_list = self.dataset_test_list[index]
+            start_end = self.dataset_answer_st_ed_list[index]
+            start = start_end[0][0]
+            end = start_end[0][1]
             min_ylim = min(test_list) - 100
             max_ylim = max(test_list) + 100
             fig = plt.gcf()
@@ -104,15 +133,6 @@ class plot_data():
             plt.axvline(end, color='green', linestyle='dashdot', linewidth=1)
             plt.gca().set_ylabel('value')
             plt.gca().set_xlabel('Time')
-            plt.savefig(os.path.join(self.image_tran_path,"{}.png".format(self.name_list[index])))
+            plt.savefig(os.path.join(self.image_tran_path, "{}.png".format(self.name_list[index])))
             plt.clf()
-            self.dataset_test_list.append(test_list)
-            self.dataset_answer_list.append(answer_lists)
-            self.dataset_answer_st_ed_list.append(answer_st_ed_list)
-
-            print("#### end file test_files[index]    ###########")
-
-
-
-
-
+        print("#### END save image {} l :{} i: {}".format(self._pattern, self._len, self._interval))
