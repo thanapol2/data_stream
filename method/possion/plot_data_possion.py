@@ -15,11 +15,12 @@ class plot_data():
         self._len = len
         self._interval = interval
         self._type = type
-        self._folder_pattern = "{}_L{}_I{}".format(self._pattern,self._len,self._interval)
-        self.test_path = "{}\\lightcurve_benchmark\\{}\\{}\\test".format(self._path,self._type,self._folder_pattern)
-        self.ans_path =  "{}\\lightcurve_benchmark\\{}\\{}\\answer".format(self._path, self._type,self._folder_pattern)
+        self._testfile = "{}_test_{}_w{}_i{}.txt".format(self._type,self._pattern,self._len,self._interval)
+        self._ansfile = "{}_ans_{}_w{}_i{}.txt".format(self._type, self._pattern, self._len, self._interval)
+        self.test_path = "{}\\test".format(self._path)
+        self.ans_path =  "{}\\answer".format(self._path)
 
-        self.text_file = "{}\\lightcurve_benchmark\\{}\\{}\\result.txt".format(self._path,self._type,self._folder_pattern)
+        self.text_file = "{}\\{}_result.txt".format(self._path,self._testfile)
         self.test_files_list = []
         self.ans_files_list = []
         self.name_list = []
@@ -69,9 +70,8 @@ class plot_data():
         print("#### start open file {} l :{} i: {}".format(self._pattern, self._len, self._interval))
         print("Load : {}".format(self.test_path))
         for r, d, f in os.walk(self.test_path):
-            for file in f:
-                self.name_list.append(file)
-                self.test_files_list.append(os.path.join(r, file))
+            self.name_list.append(self._file)
+            self.test_files_list.append(os.path.join(r, self._file))
 
         for r, d, f in os.walk(self.ans_path):
             for file in f:
@@ -101,9 +101,43 @@ class plot_data():
 
             print("#### end file test_files[index]    ###########")
 
+    def load_data_fromfile(self):
+        self.reset_dataset()
+        print("#### start open file {} l :{} i: {}".format(self._pattern, self._len, self._interval))
+        print("Load : {}".format(self.test_path))
+        for r, d, f in os.walk(self.test_path):
+            self.name_list.append(self._testfile)
+            self.test_files_list.append(os.path.join(r, self._testfile))
+
+        for r, d, f in os.walk(self.ans_path):
+            self.ans_files_list.append(os.path.join(r, self._ansfile))
+        print("#### End load file {} l :{} i: {}".format(self._pattern, self._len, self._interval))
+
+        for index in range(len(self.test_files_list)):
+            test_list = []
+            answer_lists = []
+            answer_st_ed_list = []
+            print("#### start file {}    ###########".format(self.name_list[index]))
+            with open(self.test_files_list[index]) as txt_lines:
+                for line in txt_lines:
+                    test_list.append(int(line.replace('\n', '')))
+
+            with open(self.ans_files_list[index]) as txt_lines:
+                for line in txt_lines:
+                    answer_lists.append(int(line.replace('\n', ''))*self._interval)
+                    print ("{} .... {}".format(int(line.replace('\n', '')) ,int(line.replace('\n', '')) * self._interval))
+            for i in answer_lists:
+                start = i
+                end = i + self._interval
+                answer_st_ed_list.append([start, end])
+            self.dataset_test_list.append(test_list)
+            self.dataset_answer_list.append(answer_lists)
+            self.dataset_answer_st_ed_list.append(answer_st_ed_list)
+
+            print("#### end file test_files[index]    ###########")
+
     def save_image_transient(self,is_tranline = True,img_path ='tran_img'):
-        image_tran_path = "{}\\lightcurve_benchmark\\{}\\{}\\{}".format(self._path, self._type, self._folder_pattern,
-                                                                        img_path)
+        image_tran_path = "{}\\{}".format(self._path,img_path)
         if not os.path.exists(image_tran_path):
             print("######## Create folder image###############")
             os.mkdir(image_tran_path)
@@ -132,35 +166,54 @@ class plot_data():
         print("#### END save image {} l :{} i: {}".format(self._pattern, self._len, self._interval))
 
     def save_image_changepoint_with_tran(self,change_point_list,index,range_per_file=500,img_path ='tran_img'):
-        image_tran_path = "{}\\lightcurve_benchmark\\{}\\{}\\{}".format(self._path, self._type, self._folder_pattern,
-                                                                        img_path)
         # folder_changepoint_path = "{}\\lightcurve_benchmark\\{}\\{}\\{}\\{}".format(self._path, self._type, self._folder_pattern,
         #                                                                 img_path,self.name_list[index])
+        image_tran_path = "{}\\{}\\".format(self._path, self._type)
         if not os.path.exists(image_tran_path):
             print("######## Create folder image###############")
             os.mkdir(image_tran_path)
+        image_tran_path = "{}\\{}\\{}\\".format(self._path, self._type, self._pattern)
+        if not os.path.exists(image_tran_path):
+            print("######## Create folder image###############")
+            os.mkdir(image_tran_path)
+        image_tran_path = "{}\\{}\\{}\\{}".format(self._path, self._type, self._pattern,
+                                                  self._len)
+        if not os.path.exists(image_tran_path):
+            print("######## Create folder image###############")
+            os.mkdir(image_tran_path)
+        image_tran_path = "{}\\{}\\{}\\{}\\{}".format(self._path, self._type, self._pattern,
+                                                  self._len,self._interval)
+        if not os.path.exists(image_tran_path):
+            print("######## Create folder image###############")
+            os.mkdir(image_tran_path)
+
 
         print("#### start save image {} l :{} i: {}".format(self._pattern, self._len, self._interval))
         test_list = self.dataset_test_list[index]
         min_ylim = min(test_list) - 100
         max_ylim = max(test_list) + 100
         num_image = math.ceil(len(test_list)/range_per_file)
-        for change_point in change_point_list:
-            plt.axvline(change_point, color='red', linewidth=1)
         st_ed_tran = self.get_dataset_answer_st_ed(index)
-        st_tran = st_ed_tran[0][0]
-        ed_tran = st_ed_tran[0][1]
-        plt.axvline(st_tran, color='green', linewidth=1)
-        plt.axvline(ed_tran, color='green', linewidth=1)
-        fig = plt.gcf()
-        fig.set_size_inches(18, 9)
-        plt.plot(test_list)
-        plt.gca().set_ylim(min_ylim, max_ylim)
-        plt.gca().set_ylabel('value')
-        plt.gca().set_xlabel('Time')
-        plt.gca().set_xlim(st_tran - 200, ed_tran + 200)
-        plt.savefig(os.path.join(image_tran_path, "{}_t.png".format(self.name_list[index])))
-        plt.clf()
+        for i in range(len(st_ed_tran)):
+            st_tran = st_ed_tran[i][0]
+            ed_tran = st_ed_tran[i][1]
+            plt.axvline(st_tran, color='green', linewidth=1)
+            plt.axvline(ed_tran, color='green', linewidth=1)
+            fig = plt.gcf()
+            fig.set_size_inches(8, 5)
+            plt.rc('xtick', labelsize=13)
+            plt.rc('ytick', labelsize=13)
+            plt.rc('axes', labelsize=15)
+            plt.plot(test_list)
+            plt.gca().set_ylim(min_ylim, max_ylim)
+            plt.gca().set_ylabel('value')
+            plt.gca().set_xlabel('Time')
+            plt.gca().set_xlim(st_tran - 200, ed_tran + 200)
+            for change_point in change_point_list:
+                plt.axvline(change_point, color='red', linewidth=1)
+            plt.savefig(os.path.join(image_tran_path, "{}_{}_t.png".format(self.name_list[index],i)))
+            plt.clf()
+            print("####  save image {}_{}_t.png".format(self.name_list[index],i))
 
         print("#### END save image {} l :{} i: {}".format(self._pattern, self._len, self._interval))
 

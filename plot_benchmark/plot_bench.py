@@ -28,7 +28,7 @@ max_len = 40000
 
 k = 3
 # cheb = chebyshev(max_size = max_size, min_size = min_size, k=k)
-cheb= chebyshev(max_size = size, k=k)
+cheb= chebyshev(max_window= size, k=k)
 
 with open(test) as txt_lines:
     for line in txt_lines:

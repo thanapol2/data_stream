@@ -36,7 +36,7 @@ for pattern,num_graph,pattern_name in patterns:
     answer_lists = []
     answer_st_ed_list = []
 
-    cheb_ineq= chebyshev(max_size = cheb_windows_size, k=k)
+    cheb_ineq= chebyshev(max_window= cheb_windows_size, k=k)
     cheb_test_list = []
 
     with open(test) as txt_lines:

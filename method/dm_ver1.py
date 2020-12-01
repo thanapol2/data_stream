@@ -5,7 +5,7 @@ from skmultiflow.drift_detection.base_drift_detector import BaseDriftDetector
 
 class dm_ver1(BaseDriftDetector):
 
-    def __init__(self,k=3,decision_size=10,expectation_rate = 0.25):
+    def __init__(self,k=3,decision_size=20,expectation_rate = 0.2):
         self.decision_window = []
         # self.prior_window = []
         self.reset()

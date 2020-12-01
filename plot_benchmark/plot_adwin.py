@@ -4,6 +4,7 @@ import numpy as np
 import os
 import statistics
 from method.Ad_cheb import Ad_cheb as ad_cheb
+# from chebyshev_adwin import chebyshev_adwin as ad_cheb
 from datetime import datetime
 
 # Fix parameter
@@ -14,9 +15,10 @@ _prefix = "poisson"
 # _path = "C:\\Users\\karnk\\git\\data_stream\\dataset\\"
 raw = _path + "training\\"+_prefix+"\\_train.txt"
 _text_file = _path+"image\\"+_prefix+"\\result.txt"
-patterns = [("si", 0, "SIN pattern"), ("sq", 1, "Square pattern"), ("tr", 2, "Triangle pattern")]
+# patterns = [("si", 0, "SIN pattern"), ("sq", 1, "Square pattern"), ("tr", 2, "Triangle pattern")]
 # patterns = [("si", 0, "SIN pattern"), ("sq", 1, "Square pattern")]
 # patterns = [("si", 0, "SIN pattern")]
+patterns = [("tr", 0, "Triangle pattern")]
 
 
 def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
@@ -85,7 +87,7 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
             if cheb_test.detected_change():
             # if adwin.detected_change():
                 cheb_result_list.append(i)
-
+        # cheb_result_list.append(1)
         print("#### end check cheb #######")
         print("#### plot  cheb #######")
         # for i in cheb_result_list:
@@ -193,12 +195,15 @@ def plot_result(results):
             image_name = "w{}_i{}_image{}.png".format(_width,_len,count_image)
             print("------save file {}".format(image_name))
             fig = plt.gcf()
-            fig.set_size_inches(18, 9)
+            fig.set_size_inches(8, 5)
+            plt.rc('xtick', labelsize=13)
+            plt.rc('ytick', labelsize=13)
+            plt.rc('axes', labelsize=15)
             plt.plot(test_list)
             # plt.plot(list_up_variance,color='red')
             # plt.plot(list_low_variance,color='red')
             plt.gca().set_ylim(min_ylim, max_ylim)
-            plt.gca().set_xlim(start-500, end+500)
+            plt.gca().set_xlim(start-100, end+100)
             plt.axvline(start, color='green', linestyle='dashdot', linewidth=1)
             plt.axvline(end, color='green', linestyle='dashdot', linewidth=1)
             plt.gca().set_ylabel('value')
@@ -206,6 +211,7 @@ def plot_result(results):
             for cheb in cheb_result_list:
                 plt.axvline(cheb, color='red', linestyle='-', linewidth=0.7)
             plt.savefig(folder_image+image_name)
+
             # plt.show()
             plt.clf()
             count_image = count_image + 1
