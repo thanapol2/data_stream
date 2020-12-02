@@ -17,15 +17,17 @@ for type in types:
     for pattern in patterns:
         for L in LS:
             for I in IS:
-                data = plot_data(path='D:\\git_project\\data stream\\dataset', type=type, pattern=pattern, len=L,
+                data = plot_data(path='C:\\Users\\karnk\\git\\data_stream\\dataset', type=type, pattern=pattern, len=L,
                                  interval=I)
+                # data = plot_data(path='D:\\git_project\\data stream\\dataset', type=type, pattern=pattern, len=L,
+                #                  interval=I)
                 data.load_data_fromfile()
                 window = sliding_win(windows_size)
                 for i in range(data.get_file_lenght()):
                     file_name = data.get_file_name(i)
                     measurements = data.get_dataset_test(i)[:50]
                     xs, priors = np.zeros((len(measurements), 2)), np.zeros((len(measurements), 2))
-                    x_mean = 0
+                    x_mean = 100
                     x_variance = 400
                     for index,measurement in enumerate(measurements):
                         prior_mean, prior_variance = kalman.predict(x_mean, x_variance, process_mean, process_var)
