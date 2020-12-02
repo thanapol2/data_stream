@@ -12,7 +12,7 @@ class sliding_win():
 
     def append(self,data):
         if self._window:
-            if len(self._window)>self._window:
+            if len(self._window)>self._size:
                 self._window.pop()
         self._window.append(data)
 
@@ -24,7 +24,7 @@ class sliding_win():
 
     def get_variance(self):
         variance = 400
-        if self._window:
+        if len(self._window)>2:
             variance = statistics.variance(self._window)
         return variance
 
