@@ -2,11 +2,11 @@ from method.possion.plot_data_possion import  plot_data as plot_data
 from method.possion.change_detection import  change_detection
 
 cheb_windows_size = 500
-k = 2
+k = 3
 types = ["poisson"]
 patterns = ["sq"]
-LS = [1,5]
-IS = [100]
+LS = [5]
+IS = [1000]
 # types = ["test"]
 # LS = [5]
 # IS = [5,10]
@@ -27,14 +27,16 @@ for type in types:
                     answer = data.get_dataset_answer(i)
                     start_end = data.get_dataset_answer_st_ed(i)
 
-                    cd = change_detection(method_type=0,test_list=test_list,answer=answer,start_end=start_end,is_dm = True)
+                    # cd = change_detection(method_type=0,test_list=test_list,answer=answer,start_end=start_end,is_dm = True)
+                    cd = change_detection(method_type=0, test_list=test_list, answer=answer, start_end=start_end)
                     cd.compute_change(cheb_windows_size=cheb_windows_size,k=k)
 
                     count_found = count_found + cd.get_true_count()
                     count_false = count_false + cd.get_false_count()
-                    data.save_result_csv(type=type, pattern=pattern, I=I, L=L, index=i, algorithm="K2 Base DM", count_true=count_found,
-                                         count_false=count_false, tran_found=cd.get_tran_found(), csv_file="possion_base")
+                    # data.save_result_csv(type=type, pattern=pattern, I=I, L=L, index=i, algorithm="K2 Base DM", count_true=count_found,
+                    #                      count_false=count_false, tran_found=cd.get_tran_found(), csv_file="possion_base")
                     # data.save_image_changepoint(change_point_list=cd.get_change_points(),index=i)
+                    data.plot_range(change_point_list=cd.get_change_points(),index=i,min_xlim=27500,max_xlim=29500,min_ylim=60,max_ylim=180)
                     # data.save_image_changepoint_with_tran(change_point_list=cd.get_change_points(), index=i)
                 # data.save_result(count_found,count_false)
                     print("test")

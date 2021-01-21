@@ -57,4 +57,3 @@ class chebyshev_adwin(BaseDriftDetector):
             self.window.pop(0)
         self.in_concept_change = bln_change
         return bln_change
-    

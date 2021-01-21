@@ -1,5 +1,5 @@
 from method.possion.plot_data_possion import  plot_data as plot_data
-
+from method.binning import binning as binning
 
 
 bin_period = 500
@@ -21,4 +21,8 @@ for type in types:
                 for i in range(data.get_file_lenght()):
                     file_name = data.get_file_name(i)
                     data_stream = data.get_dataset_test(i)
-                    print(1)
+                    bin = binning()
+
+                    for i, instance in enumerate(data_stream):
+                        is_full = bin.add_instance(instance)
+                        

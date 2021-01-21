@@ -217,6 +217,28 @@ class plot_data():
 
         print("#### END save image {} l :{} i: {}".format(self._pattern, self._len, self._interval))
 
+    def plot_range(self,change_point_list,index,min_xlim,max_xlim,min_ylim,max_ylim):
+        test_list = self.dataset_test_list[index]
+        # min_ylim = min(test_list) - 100
+        # max_ylim = max(test_list) + 100
+        for change_point in change_point_list:
+            plt.axvline(change_point, color='red', linewidth=1)
+        st_ed_tran = self.get_dataset_answer_st_ed(index)
+        st_tran = st_ed_tran[0][0]
+        ed_tran = st_ed_tran[0][1]
+        plt.axvline(st_tran, color='green', linewidth=1)
+        plt.axvline(ed_tran, color='green', linewidth=1)
+        fig = plt.gcf()
+        fig.set_size_inches(18, 9)
+        plt.plot(test_list)
+        plt.gca().set_ylim(min_ylim, max_ylim)
+        plt.gca().set_ylabel('value')
+        plt.gca().set_xlabel('Time')
+        plt.gca().set_xlim(min_xlim, max_xlim)
+        plt.show()
+        plt.clf()
+
+
     def save_image_changepoint(self,change_point_list,index,range_per_file=500,img_path ='tran_img'):
         image_tran_path = "{}\\lightcurve_benchmark\\{}\\{}\\{}".format(self._path, self._type, self._folder_pattern,
                                                                         img_path)

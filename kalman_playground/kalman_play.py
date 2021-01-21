@@ -9,40 +9,45 @@ import matplotlib.pyplot as plt
 windows_size = 500
 types = ["poisson"]
 patterns = ["sq"]
-LS = [1,5]
-IS = [100]
-process_var = 1
-process_mean = 0
+LS = [5]
+IS = [1000]
+model_var = 1
+model_mean = 0
 for type in types:
     for pattern in patterns:
         for L in LS:
             for I in IS:
-                data = plot_data(path='C:\\Users\\karnk\\git\\data_stream\\dataset', type=type, pattern=pattern, len=L,
-                                 interval=I)
-                # data = plot_data(path='D:\\git_project\\data stream\\dataset', type=type, pattern=pattern, len=L,
+                # data = plot_data(path='C:\\Users\\karnk\\git\\data_stream\\dataset', type=type, pattern=pattern, len=L,
                 #                  interval=I)
+                data = plot_data(path='D:\\git_project\\data stream\\dataset', type=type, pattern=pattern, len=L,
+                                 interval=I)
                 data.load_data_fromfile()
                 window = sliding_win(windows_size)
                 for i in range(data.get_file_lenght()):
                     file_name = data.get_file_name(i)
-                    measurements = data.get_dataset_test(i)[:50]
-                    xs, priors = np.zeros((len(measurements), 2)), np.zeros((len(measurements), 2))
-                    x_mean = 100
-                    x_variance = 400
-                    for index,measurement in enumerate(measurements):
-                        prior_mean, prior_variance = kalman.predict(x_mean, x_variance, process_mean, process_var)
+                    measurements = data.get_dataset_test(i)[0:40000]
+                    x = 10
+                    x_var = 10000
+                    model_mean = 0
+                    model_var = 0.01
+                    xs = np.zeros((len(measurements), 2))
+                    ps = np.zeros((len(measurements), 2))
 
-                        window.append(measurement)
-                        measurement_mean = window.get_mean()
-                        measurement_variance = window.get_variance()
-                        x_mean, x_variance = kalman.update(prior_mean,prior_variance,measurement_mean,measurement_variance)
+                    for i, measurement in enumerate(measurements):
+                        x, x_var = kalman.update(x, x_var, measurement, model_var)
+                        xs[i] = x, x_var
+                        x, x_var = kalman.predict(x, x_var, model_mean, model_var)
 
-                        priors[index] = [prior_mean, prior_variance]
-                        xs[index] = [x_mean, x_variance]
+                        ps[i] = x, x_var
 
-                    book_plots.plot_measurements(measurements)
-                    book_plots.plot_filter(xs[:, 0], var=priors[:, 1])
-                    book_plots.plot_predictions(priors[:, 0])
-                    book_plots.show_legend()
-                    kf_internal.print_variance(xs)
+                    fig = plt.gcf()
+
+                    fig.set_size_inches(20, 9)
+
+                    # book_plots.plot_measurements(measurements)
+                    book_plots.plot_filter(xs[:, 0])
+                    # book_plots.show_legend()
+                    plt.gca().set_xlim(27500, 29500)
                     plt.show()
+                    # print(xs)
+                    print(ps)

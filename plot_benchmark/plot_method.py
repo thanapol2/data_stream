@@ -58,7 +58,7 @@ def plotbench(_len=100,_width=1,min_len_cal=0,max_len_cal=1800000,
 
 
 
-        cheb_test = chebyshev(max_size=cheb_windows_size, k=k)
+        cheb_test = chebyshev(max_window=cheb_windows_size, k=k)
         cheb_result_list = []
 
         with open(test) as txt_lines:
