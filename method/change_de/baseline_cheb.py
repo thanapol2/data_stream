@@ -8,7 +8,7 @@ from skmultiflow.drift_detection.base_drift_detector import BaseDriftDetector
 ref : https://scikit-multiflow.github.io/
 """
 
-class chebyshev_adwin(BaseDriftDetector):
+class chebyshev_base(BaseDriftDetector):
 
     MAX_BUCKETS = 5
 

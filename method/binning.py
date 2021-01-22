@@ -20,10 +20,14 @@ class binning():
         return self.bin
 
     def add_instance(self,instance):
-        self.bin.append(instance)
-        return(self.is_full_bin())
+        if not self.can_add_bin():
+            self.bin.append(instance)
+        return(self.can_add_bin())
 
-    def is_full_bin(self):
+    def can_add_bin(self):
+        return not self.is_full()
+
+    def is_full(self):
         self.is_full = False
         if (len(self.bin) % self.bin_period) == 0:
             self.is_full = True

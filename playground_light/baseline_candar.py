@@ -23,17 +23,9 @@ for type in types:
                 for i in range(data.get_file_lenght()):
                     file_name = data.get_file_name(i)
                     instances = data.get_dataset_test(i)
-                    bin = binning()
 
                     for index, instance in enumerate(instances):
-                        is_change = False
-                        if bin.can_add_bin():
-                            bin.add_instance(instance)
-                        else:
-                            for instance_bin in bin.get_bin():
-                                cheb.add_element(instance_bin)
-                            is_change = cheb.add_element(instance)
-                            bin.reset_bin()
+                        is_change = cheb.add_element(instance)
                         if is_change:
                             change_points.append(index)
 

@@ -1,14 +1,18 @@
 import statistics
 
 class sliding_win():
-    def __init__(self, size='100'):
+    def __init__(self, size=100,start_mean = 100,start_variance=400):
         self.reset()
         self._size = size
         self._window = []
+        self._variance = start_variance
+        self._mean = start_mean
 
     def reset(self):
         self._size = 0
         self._window = []
+        self._variance = 400
+        self._mean = 100
 
     def append(self,data):
         if self._window:
@@ -17,13 +21,13 @@ class sliding_win():
         self._window.append(data)
 
     def get_mean(self):
-        mean = 0
+        mean = self._mean
         if self._window:
             mean = statistics.mean(self._window)
         return mean
 
     def get_variance(self):
-        variance = 400
+        variance = self._variance
         if len(self._window)>2:
             variance = statistics.variance(self._window)
         return variance
