@@ -17,7 +17,7 @@ for type in types:
                                  interval=I)
                 data.load_data_fromfile()
 
-                # # binning process
+                # # Cheb
                 cheb = chebyshev_base(max_window=500,k=3)
                 change_points = []
                 for i in range(data.get_file_lenght()):
