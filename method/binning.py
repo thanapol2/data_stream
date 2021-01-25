@@ -25,9 +25,10 @@ class binning():
         return(self.can_add_bin())
 
     def can_add_bin(self):
-        return not self.is_full()
 
-    def is_full(self):
+        return not self.is_full_bin()
+
+    def is_full_bin(self):
         self.is_full = False
         if (len(self.bin) % self.bin_period) == 0:
             self.is_full = True
