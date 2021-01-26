@@ -28,6 +28,11 @@ for type in types:
                         if is_change:
                             change_points.append(index)
 
+                # change_points = [1,200,300]
                 data.set_change_points(change_points)
-                print(change_points)
-                csv_path = 'D:\\git_project\\data stream\\result\\{}_W{}_L{}'
+
+                # print(change_points)
+                result_name = '{}_W{}_L{}'.format(type,L,I)
+
+                data.save_result_to_csv(dataset_index=0, threshold_after=100, L=L, I=I, Algorithm="ADWIN",
+                                        Dataset_type=type, pattern=pattern)

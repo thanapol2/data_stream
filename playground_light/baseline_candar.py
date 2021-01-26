@@ -31,8 +31,9 @@ for type in types:
 
                 # change_points = [1,200,300]
                 data.set_change_points(change_points)
+                print("### end change detection##")
 
                 # print(change_points)
                 result_name = '{}_W{}_L{}'.format(type,L,I)
 
-                data.save_result_to_csv(dataset_index=0,threshold_after = 100,L=L,I=I,Algorithm="Base Cheb 500",Dataset_type=type)
+                data.save_result_to_csv(dataset_index=0,threshold_after = 100,L=L,I=I,Algorithm="Base Cheb 500",Dataset_type=type,pattern=pattern)

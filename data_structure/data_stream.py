@@ -97,7 +97,6 @@ class data_stream():
             with open(self.ans_files_list[index]) as txt_lines:
                 for line in txt_lines:
                     answer_lists.append(int(line.replace('\n', ''))*self._interval)
-                    print ("{} .... {}".format(int(line.replace('\n', '')) ,int(line.replace('\n', '')) * self._interval))
             for i in answer_lists:
                 start = i
                 end = i + self._interval
@@ -132,7 +131,7 @@ class data_stream():
             with open(self.ans_files_list[index]) as txt_lines:
                 for line in txt_lines:
                     answer_lists.append(int(line.replace('\n', ''))*self._interval)
-                    print ("{} .... {}".format(int(line.replace('\n', '')) ,int(line.replace('\n', '')) * self._interval))
+                    # print ("{} .... {}".format(int(line.replace('\n', '')) ,int(line.replace('\n', '')) * self._interval))
             for i in answer_lists:
                 start = i
                 end = i + self._interval
@@ -141,7 +140,7 @@ class data_stream():
             self.dataset_answer_list.append(answer_lists)
             self.dataset_answer_st_ed_list.append(answer_st_ed_list)
 
-            print("#### end file test_files[index]    ###########")
+            print("#### end file test_files{}  ###########".format(self.name_list[index]))
 
     def save_image_transient(self,is_tranline = True,img_path ='tran_img'):
         image_tran_path = "{}\\{}".format(self._path,img_path)
@@ -177,16 +176,22 @@ class data_stream():
             print("#### save result_complete   ###########")
 
 
-    def save_result_to_csv(self,dataset_index="",threshold_after = 100,L="",I="",Algorithm="",Dataset_type=""):
-        result_name = '{}_W{}_L{}'.format(Dataset_type, L, I)
+    def save_result_to_csv(self,dataset_index="",threshold_after = 100,L="",I="",Algorithm="",Dataset_type="",pattern=""):
+        result_name = '{}_{}_W{}_L{}'.format(pattern,Algorithm, L, I)
         if self.change_points is None:
             print("No change point or No set data")
         else:
-            result_mainfolder_path = "{}\\result".format(self._path)
+            result_mainfolder_path = "{}\\{}_result".format(self._path,Dataset_type)
             if not os.path.exists(result_mainfolder_path):
                 print("######## Create folder {}###############".format(result_mainfolder_path))
                 os.mkdir(result_mainfolder_path)
-            result_folder_path = "{}\\result\\{}".format(self._path,result_name)
+            # Algorithm folder
+            # result_mainfolder_path = "{}\\{}".format(result_mainfolder_path,Algorithm)
+            # if not os.path.exists(result_mainfolder_path):
+            #     print("######## Create folder {}###############".format(result_mainfolder_path))
+            #     os.mkdir(result_mainfolder_path)
+
+            result_folder_path = "{}\\{}".format(result_mainfolder_path,result_name)
             if not os.path.exists(result_folder_path):
                 print("######## Create folder {}###############".format(result_folder_path))
                 os.mkdir(result_folder_path)
@@ -203,14 +208,21 @@ class data_stream():
             for i,timestamp in enumerate(self.change_points):
                 # check result
                 result = "False alarm"
+                result_index_tran = "None"
+                result_start ="None"
                 for index_Tran , (start, end) in enumerate(self.dataset_answer_st_ed_list[dataset_index]):
                     if (start <= timestamp) & (timestamp <= end):
                         result = "True alarm"
+                        result_index_tran = index_Tran
+                        result_start = start
                     elif (end < timestamp) & (timestamp<=end+threshold_after):
                         result = "True delay"
-                csv_row.append([Dataset_type,L,I,Algorithm,i,timestamp, result,index_Tran,start])
+                        result_index_tran = index_Tran
+                        result_start = start
+                csv_row.append([Dataset_type,L,I,Algorithm,i,timestamp, result,result_index_tran,result_start])
 
 
             with open(csv_path, 'w', newline='') as file:
                 writer = csv.writer(file)
                 writer.writerows(csv_row)
+            print("##### save : {}#########".format(csv_path))
