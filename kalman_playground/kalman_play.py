@@ -17,10 +17,10 @@ for type in types:
     for pattern in patterns:
         for L in LS:
             for I in IS:
-                # data = plot_data(path='C:\\Users\\karnk\\git\\data_stream\\dataset', type=type, pattern=pattern, len=L,
-                #                  interval=I)
-                data = plot_data(path='D:\\git_project\\data stream\\dataset', type=type, pattern=pattern, len=L,
+                data = plot_data(path='C:\\Users\\karnk\\git\\data_stream\\dataset', type=type, pattern=pattern, len=L,
                                  interval=I)
+                # data = plot_data(path='D:\\git_project\\data stream\\dataset', type=type, pattern=pattern, len=L,
+                #                  interval=I)
                 data.load_data_fromfile()
                 window = sliding_win(windows_size)
                 for i in range(data.get_file_lenght()):
@@ -35,6 +35,8 @@ for type in types:
 
                     for i, measurement in enumerate(measurements):
                         x, x_var = kalman.update(x, x_var, measurement, model_var)
+                        if (i==28000):
+                            print ("aa")
                         xs[i] = x, x_var
                         x, x_var = kalman.predict(x, x_var, model_mean, model_var)
 
@@ -42,11 +44,25 @@ for type in types:
 
                     fig = plt.gcf()
 
-                    fig.set_size_inches(20, 9)
+                    # fig.set_size_inches(20, 9)
+
+                    # book_plots.plot_measurements(measurements)
+                    book_plots.plot_filter(ps[:, 0])
+                    # book_plots.show_legend()
+                    plt.gca().set_xlim(27500, 29500)
+                    plt.show()
+
+                    plt.clf()
+                    # fig.set_size_inches(20, 9)
 
                     # book_plots.plot_measurements(measurements)
                     book_plots.plot_filter(xs[:, 0])
                     # book_plots.show_legend()
+                    plt.gca().set_xlim(27500, 29500)
+                    plt.show()
+
+                    plt.clf()
+                    book_plots.plot_filter(measurements)
                     plt.gca().set_xlim(27500, 29500)
                     plt.show()
                     # print(xs)
