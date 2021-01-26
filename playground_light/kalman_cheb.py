@@ -1,5 +1,4 @@
-from method.possion.plot_data_possion import  plot_data as plot_data
-from method.window_tech.sliding_win import sliding_win
+from data_structure.data_stream import data_stream as data_stream
 import kalman_playground.kalman_method as kalman
 import numpy as np
 from method.change_de.baseline_cheb import chebyshev_base as chebyshev_base
@@ -14,19 +13,19 @@ model_variance = 0.01
 
 windows_size = 500
 types = ["poisson"]
-patterns = ["sq"]
-LS = [1,5]
-IS = [100]
+patterns = ["sq","tr","si"]
+LS = [1,3,5]
+IS = [100,500,1000]
 process_var = 1
 process_mean = 0
 for type in types:
     for pattern in patterns:
         for L in LS:
             for I in IS:
-                data = plot_data(path='C:\\Users\\karnk\\git\\data_stream\\dataset', type=type, pattern=pattern, len=L,
-                                 interval=I)
-                # data = plot_data(path='D:\\git_project\\data stream\\dataset', type=type, pattern=pattern, len=L,
+                # data = data_stream(path='C:\\Users\\karnk\\git\\data_stream\\dataset', type=type, pattern=pattern, len=L,
                 #                  interval=I)
+                data = data_stream(path='D:\\git_project\\data stream\\dataset', type=type, pattern=pattern, len=L,
+                                 interval=I)
                 data.load_data_fromfile()
 
                 # cheb
@@ -51,5 +50,10 @@ for type in types:
                         is_change = cheb.add_element(x)
                         if is_change:
                             change_points.append(index)
-                print(change_points)
 
+                data.set_change_points(change_points)
+                # print(change_points)
+                result_name = '{}_W{}_L{}'.format(type, L, I)
+
+                data.save_result_to_csv(dataset_index=0, threshold_after=100, L=L, I=I, Algorithm="Kalman + Cheb 500",
+                                        Dataset_type=type,pattern=pattern)
